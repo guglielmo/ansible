@@ -1,0 +1,7 @@
+---
+
+- name: wbc server 
+  hosts: wbc
+  remote_user: root
+  tasks:
+  - include: tasks/packages.yml

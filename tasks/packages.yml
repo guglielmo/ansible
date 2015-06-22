@@ -1,0 +1,11 @@
+---
+
+- name: run apt-get update
+  apt: upgrade=dist
+
+- name: install packages
+  apt: name={{item}} state=present
+  with_items:
+  - emacs24-nox
+  - iotop
+  - glances
