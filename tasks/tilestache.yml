@@ -1,0 +1,33 @@
+---
+
+- name: install mapnik packages
+  apt: name={{item}} state=present
+  with_items:
+  - libmapnik2-dev
+  - python-mapnik
+  - python-pip
+  - python-virtualenv
+  - python-pil
+
+- name: create directories
+  file: path=/srv/gis/{{item}} state=directory mode=0755 owner=gis group=gis
+  with_items:
+  - layers
+  - mapnik
+  - tilestache
+  - cache
+
+- name: create virtualenv and install packages
+  pip: name={{item}} virtualenv=/srv/gis/env
+  with_items:
+  - nik2img
+  - modestmaps
+  - simplejson
+  - werkzeug
+  - TileStache
+
+- name: copy tilestache config and wsgi
+  copy: src={{item}} dest=/srv/gis/tilestache/{{item}}
+  with_items:
+  - tilestache.cfg
+  - wsgi.py

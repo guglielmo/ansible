@@ -1,0 +1,31 @@
+---
+
+- name: install packages
+  apt: name={{item}} state=present
+  with_items:
+  - postgresql-9.3
+  - postgresql-9.3-postgis-2.1
+  - osm2pgsql
+
+- name: create a gis user
+  user: name="gis"
+        home="/srv/gis"
+        comment="GIS user"
+        shell="/bin/bash"
+        state=present
+
+- name: create directories
+  file: path=/srv/gis/{{item}} state=directory mode=0755 owner=gis group=gis
+  with_items:
+  - scripts
+  - osm
+
+- name: copy scripts
+  copy: src={{item}} dest=/srv/gis/scripts/{{item}}
+  with_items:
+  - create-postgis-berlin.sh
+  - create-postgis-hamburg.sh
+  - download-osm-berlin.sh
+  - download-osm-hamburg.sh
+  - ingest-osm-berlin.sh
+  - ingest-osm-hamburg.sh

@@ -1,7 +1,9 @@
 ---
 
-- name: wbc server 
+- name: wbc server
   hosts: wbc
   remote_user: root
   tasks:
-  - include: tasks/packages.yml
+  #- include: tasks/packages.yml
+  #- include: tasks/postgis.yml
+  - include: tasks/tilestache.yml
