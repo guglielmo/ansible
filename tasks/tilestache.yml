@@ -18,7 +18,7 @@
   - cache
 
 - name: create virtualenv and install packages
-  pip: name={{item}} virtualenv=/srv/gis/env
+  pip: name={{item}} virtualenv=/srv/gis/env virtualenv_site_packages=yes
   with_items:
   - nik2img
   - modestmaps
@@ -31,3 +31,12 @@
   with_items:
   - tilestache.cfg
   - wsgi.py
+
+- name: fetch bbs-mapnik from github
+  git: repo=https://github.com/webuildcity/bbs-mapnik.git dest=/srv/gis/mapnik/bbs
+
+- name: set permissions on folders
+  file: path=/srv/gis/{{item}} owner=gis group=gis recurse=yes
+  with_items:
+  - env
+  - mapnik

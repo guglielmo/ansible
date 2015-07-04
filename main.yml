@@ -4,6 +4,9 @@
   hosts: wbc
   remote_user: root
   tasks:
-  #- include: tasks/packages.yml
-  #- include: tasks/postgis.yml
+  - include: tasks/packages.yml
+    tags: ['packages']
+  - include: tasks/postgis.yml
+    tags: ['postgis']
   - include: tasks/tilestache.yml
+    tags: ['tilestache']
