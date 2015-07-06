@@ -8,6 +8,8 @@
   - python-pip
   - python-virtualenv
   - python-pil
+  - apache2
+  - libapache2-mod-wsgi
 
 - name: create directories
   file: path=/srv/gis/{{item}} state=directory mode=0755 owner=gis group=gis
@@ -26,11 +28,17 @@
   - werkzeug
   - TileStache
 
+- name: source virtual env in .bashrc
+  lineinfile: dest=/srv/gis/.bashrc line="source /srv/gis/env/bin/activate"
+
 - name: copy tilestache config and wsgi
   copy: src={{item}} dest=/srv/gis/tilestache/{{item}}
   with_items:
   - tilestache.cfg
   - wsgi.py
+
+- name: copy apache2 vhost files
+  copy: src=tilestache.conf dest=/etc/apache2/sites-available/tilestache.conf
 
 - name: fetch bbs-mapnik from github
   git: repo=https://github.com/webuildcity/bbs-mapnik.git dest=/srv/gis/mapnik/bbs
@@ -40,3 +48,5 @@
   with_items:
   - env
   - mapnik
+  - layers
+

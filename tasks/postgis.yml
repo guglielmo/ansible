@@ -27,5 +27,6 @@
   - create-postgis-hamburg.sh
   - download-osm-berlin.sh
   - download-osm-hamburg.sh
+  - download-layers.sh
   - ingest-osm-berlin.sh
   - ingest-osm-hamburg.sh
