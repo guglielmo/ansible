@@ -1,0 +1,34 @@
+<VirtualHost *:80>
+
+    ServerName {{subdomain}}.we-build.city
+    ServerAdmin admin@we-build.city
+
+    CustomLog ${APACHE_LOG_DIR}/{{subdomain}}.access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/{{subdomain}}.error.log
+
+    DocumentRoot /var/www/
+
+    WSGIDaemonProcess {{subdomain}}.we-build.city user=wbc group=wbc processes=2 python-path=/srv/wbc/{{subdomain}}/env/lib/python2.7/site-packages:/srv/wbc/{{subdomain}}/checkout:/usr/lib64/python2.6/dist-packages/
+    WSGIProcessGroup {{subdomain}}.we-build.city
+    WSGIScriptAlias / /srv/wbc/{{subdomain}}/checkout/wbh/wsgi.py
+
+    <Directory /srv/wbc/{{subdomain}}/checkout/wbh/>
+        <Files wsgi.py>
+            Require all granted
+            Allow from all
+        </Files>
+    </Directory>
+
+    Alias /static /srv/wbc/{{subdomain}}/checkout/static_root/
+    <Directory /srv/wbc/{{subdomain}}/checkout/static_root/>
+        Require all granted
+        Allow from all
+    </Directory>
+
+    <Location />
+        AuthUserFile /etc/apache2/passwd
+        AuthName Howdy!
+        AuthType Basic
+	   require valid-user
+    </Location>
+</VirtualHost>

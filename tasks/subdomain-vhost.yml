@@ -1,0 +1,12 @@
+---
+
+- name: "write and upload vhost config"
+  template:
+    src: templates/apache_vhost.conf.j2
+    dest: "/etc/apache2/sites-available/{{subdomain}}.conf"
+
+- name: "enable vhost config"
+  command: "a2ensite {{subdomain}}"
+
+- name: "reload apache"
+  service: name=apache2 state=reloaded

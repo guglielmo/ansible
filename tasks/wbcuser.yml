@@ -1,0 +1,8 @@
+---
+
+- name: create a wbc user
+  user: name="wbc"
+        home="/srv/wbc"
+        comment="WBC user"
+        shell="/bin/bash"
+        state=present

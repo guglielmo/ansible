@@ -1,0 +1,37 @@
+---
+
+- name: create directory
+  file: state=directory path="/srv/wbc/{{subdomain}}" group=wbc owner=wbc mode=0755 
+
+- name: "checking out {{city_repo}}"
+  git:
+    accept_hostkey: true
+    repo: "{{city_repo}}"
+    dest: "/srv/wbc/{{subdomain}}/checkout"
+    version: "{{city_version}}"
+    force: yes
+
+- name: "write and upload local.py"
+  template:
+    src: templates/local.py.j2
+    dest: "/srv/wbc/{{subdomain}}/checkout/wbh/local.py"
+
+- name: "fix permissions from checkout"
+  file: path=/srv/wbc/{{subdomain}} owner=wbc group=wbc recurse=yes
+
+- name: "update dependencies file (wbc)"
+  lineinfile: 
+    dest: "/srv/wbc/{{subdomain}}/checkout/requirements.txt"
+    line: "{{wbc_package}}" 
+    state: present
+
+- name: "update dependencies file (psycopg2)"
+  lineinfile: 
+    dest: "/srv/wbc/{{subdomain}}/checkout/requirements.txt"
+    line: "psycopg2" 
+    state: present
+
+- name: "install python dependencies into separate env"
+  pip:
+    virtualenv: "/srv/wbc/{{subdomain}}/env"
+    requirements: "/srv/wbc/{{subdomain}}/checkout/requirements.txt"

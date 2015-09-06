@@ -1,0 +1,23 @@
+---
+
+- name: wbc server
+  hosts: wbc
+  gather_facts: false
+  remote_user: root
+  vars:
+    subdomain: 'dev-hamburg-4'
+    city_repo: 'ssh://git@github.com/webuildcity/wbh.git'
+    city_version: 'develop'
+    wbc_package: 'https://github.com/webuildcity/wbc/archive/develop.zip'
+    db_name: 'hamburg1'
+  tasks:
+  - include: tasks/wbcuser.yml
+    tags: ['wbcuser']
+  - include: tasks/subdomain.yml
+    tags: ['subdomain']
+  - include: tasks/subdomain-db.yml
+    tags: ['subdomain', 'subdomain-db']
+    become: yes
+    become_user: postgres
+  - include: tasks/subdomain-vhost.yml
+    tags: ['subdomain-vhost']

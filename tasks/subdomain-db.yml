@@ -1,0 +1,25 @@
+---
+
+
+- name: "create postgres wbc user if missing"
+  postgresql_user: 
+    name: wbc
+    state: present
+
+- name: "create postgres db"
+  postgresql_db:
+    name: "{{db_name}}"
+    encoding: "UTF-8"
+    owner: wbc
+    state: present
+
+- name: "grants for new db"
+  postgresql_privs:
+    database: "{{db_name}}"
+    privs: ALL
+    state: present
+    grant_option: yes
+    type: database
+    roles: wbc
+
+
